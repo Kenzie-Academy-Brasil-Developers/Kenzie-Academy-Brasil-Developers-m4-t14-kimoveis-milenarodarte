@@ -30,7 +30,7 @@ class User {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @DeleteDateColumn({ nullable: true })
-  deletedAt: string;
+  @DeleteDateColumn({ type: "date", nullable: true })
+  deletedAt?: string | null | undefined | Date;
 }
 export { User };

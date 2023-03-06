@@ -4,8 +4,10 @@ import {
   listUsersController,
 } from "../controllers/users.controllers";
 import ensureDataIsValidMiddleware from "../middlewares/ensureDataIsValid.middleware";
+import ensureTokenIsValidMiddleware from "../middlewares/ensureTokenIsValid.middleware";
 import verifyEmailMiddleware from "../middlewares/verifyEmail.middleware";
 import { userRequestSchema } from "../schemas/users.schemas";
+import ensureIsAdminMiddleware from "../middlewares/ensureIsAdmin.middleware";
 const usersRoutes: Router = Router();
 
 usersRoutes.post(
@@ -14,6 +16,11 @@ usersRoutes.post(
   verifyEmailMiddleware,
   createUserController
 );
-usersRoutes.get("", listUsersController);
+usersRoutes.get(
+  "",
+  ensureTokenIsValidMiddleware,
+  ensureIsAdminMiddleware,
+  listUsersController
+);
 
 export default usersRoutes;

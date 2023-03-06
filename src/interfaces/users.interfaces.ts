@@ -4,7 +4,7 @@ import {
   userUpdateSchema,
   multipleUsersResponse,
 } from "../schemas/users.schemas";
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 import { DeepPartial } from "typeorm";
 
 type IUserRequest = z.infer<typeof userRequestSchema>;

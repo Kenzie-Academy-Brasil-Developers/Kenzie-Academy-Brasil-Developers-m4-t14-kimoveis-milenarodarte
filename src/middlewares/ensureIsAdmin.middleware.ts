@@ -5,7 +5,7 @@ const ensureIsAdminMiddleware = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  if (req.admin.admin === false) {
+  if (req.admin.admin === "false") {
     throw new AppError("Insufficient Permission", 403);
   }
   next();

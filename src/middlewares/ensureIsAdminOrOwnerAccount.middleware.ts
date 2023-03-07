@@ -8,7 +8,7 @@ const ensureIsAdminOrOwnerAccountMiddleware = async (
   const idQuery = Number(req.params.id);
   const id = Number(req.admin.id);
   const isAdmin = req.admin.admin;
-  if (isAdmin === false && idQuery !== id) {
+  if (isAdmin === "false" && idQuery !== id) {
     throw new AppError("Insufficient Permission", 403);
   }
   next();

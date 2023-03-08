@@ -6,4 +6,9 @@ const categoriesSchemaRequest = z.object({
 const categoriesSchemaResponse = categoriesSchemaRequest.extend({
   id: z.number().int(),
 });
-export { categoriesSchemaRequest, categoriesSchemaResponse };
+const multipleCategoriesResponse = categoriesSchemaResponse.array();
+export {
+  categoriesSchemaRequest,
+  categoriesSchemaResponse,
+  multipleCategoriesResponse,
+};

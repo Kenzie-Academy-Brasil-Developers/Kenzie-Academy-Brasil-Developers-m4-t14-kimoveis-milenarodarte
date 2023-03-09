@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const ScheduleSchemaRequest = z.object({
-  date: z.coerce.date(),
-  hour: z.string().datetime(),
+  date: z.coerce.string(),
+  hour: z.string(),
   realEstateId: z.number().int(),
 });
 
@@ -11,4 +11,9 @@ const ScheduleSchemaResponse = ScheduleSchemaRequest.extend({
   userId: z.number().int(),
 });
 
-export { ScheduleSchemaRequest, ScheduleSchemaResponse };
+const MultipleScheduleSchemaResponse = ScheduleSchemaResponse.array();
+export {
+  ScheduleSchemaRequest,
+  ScheduleSchemaResponse,
+  MultipleScheduleSchemaResponse,
+};

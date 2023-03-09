@@ -10,7 +10,6 @@ import {
   ManyToMany,
   ManyToOne,
 } from "typeorm";
-import { nullable } from "zod";
 import { Address } from "./adresses.entity";
 import { Category } from "./categories.entity";
 @Entity("real_estate")
@@ -22,7 +21,7 @@ class RealEstate {
   sold?: boolean | undefined | null;
 
   @Column({ type: "decimal", precision: 12, scale: 2 })
-  value: number;
+  value: number | string;
 
   @Column({ type: "integer" })
   size: number;

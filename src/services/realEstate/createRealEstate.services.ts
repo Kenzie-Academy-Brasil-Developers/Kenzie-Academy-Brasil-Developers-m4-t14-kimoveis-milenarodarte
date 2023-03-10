@@ -3,7 +3,7 @@ import {
   IRealEstateResponse,
 } from "../../interfaces/realEstate.interface";
 import { Repository } from "typeorm";
-import { Address, RealEstate } from "../../entities";
+import { Address, Category, RealEstate } from "../../entities";
 import { AppDataSource } from "../../data-source";
 import {
   realEstateSchemaRequest,
@@ -11,14 +11,16 @@ import {
 } from "../../schemas/realEstate.schema";
 import { AddressSchemaResponse } from "../../schemas/adress.schemas";
 import { AppError } from "../../errors";
+import { boolean } from "zod";
 const createRealEstateService = async (
   realEstateData: IRealEstateRequest
-): Promise<IRealEstateResponse> => {
+): Promise<any> => {
   const realEstateRepository: Repository<RealEstate> =
     AppDataSource.getRepository(RealEstate);
   const adressRepository: Repository<Address> =
     AppDataSource.getRepository(Address);
-
+  const categoryRepository: Repository<Category> =
+    AppDataSource.getRepository(Category);
   realEstateSchemaRequest.parse(realEstateData);
 
   const addressVerification = await adressRepository.findOne({
@@ -49,19 +51,23 @@ const createRealEstateService = async (
       newAddress = addressVerification;
     }
   }
+  let category;
+  if (realEstateData.categoryId) {
+    category = await categoryRepository.findOneBy({
+      id: Number(realEstateData.categoryId),
+    });
+  } else {
+    category = null;
+  }
 
-  let realEstate = realEstateRepository.create(realEstateData);
-  // toda vez q passa pelo create ele volta sem todos os dados, o q faço?
-  let newRealEstate = {
-    ...realEstate,
-    categoryId: realEstateData.categoryId, // problemna aqui pq n ta voltando nuber e se coloca number da erro
-    addressId: Number(newAddress.id),
-  };
+  const realEstate = realEstateRepository.create({
+    ...realEstateData,
+    category: category,
+    adress: newAddress,
+  });
 
-  await realEstateRepository.save(newRealEstate);
+  await realEstateRepository.save(realEstate);
 
-  const returnRealEstate = realEstateSchemaResponse.parse(newRealEstate);
-
-  return returnRealEstate;
+  return realEstate;
 };
 export default createRealEstateService;

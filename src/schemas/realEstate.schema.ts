@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const realEstateSchemaRequest = z.object({
-  sold: z.boolean().default(false).nullish(),
+  sold: z.boolean().default(false),
   value: z.number(),
   size: z.number().int(),
   categoryId: z.number().int().optional().nullable(),

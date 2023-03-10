@@ -8,8 +8,7 @@ import { multipleRealEstateResponseSchema } from "../../schemas/realEstate.schem
 const listRealEstateByCategoryService = async (id: number): Promise<any> => {
   const categoryRepository: Repository<Category> =
     AppDataSource.getRepository(Category);
-  const realEstateRepository: Repository<RealEstate> =
-    AppDataSource.getRepository(RealEstate);
+
   // tipar
   const category = await categoryRepository.findOne({
     where: {

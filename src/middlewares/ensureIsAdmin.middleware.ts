@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { Repository } from "typeorm";
-import { AppDataSource } from "../data-source";
+
 import { AppError } from "../errors";
-import { User } from "../entities";
+
 const ensureIsAdminMiddleware = async (
   req: Request,
   res: Response,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getRounds, hashSync } from "bcryptjs";
+
 const userRequestSchema = z.object({
   name: z.string().max(45).min(3),
   email: z.string().max(45).email(),

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { realEstateSchemaResponse } from "./realEstate.schema";
 
 const ScheduleSchemaRequest = z.object({
   date: z.string(),

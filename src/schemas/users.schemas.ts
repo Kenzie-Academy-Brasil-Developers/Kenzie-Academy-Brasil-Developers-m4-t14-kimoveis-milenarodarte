@@ -1,15 +1,10 @@
 import { z } from "zod";
-import { hashSync } from "bcryptjs";
+import { getRounds, hashSync } from "bcryptjs";
 const userRequestSchema = z.object({
   name: z.string().max(45).min(3),
   email: z.string().max(45).email(),
   admin: z.boolean().optional().default(false),
-  password: z
-    .string()
-    .max(120)
-    .transform((pass) => {
-      return hashSync(pass, 10);
-    }),
+  password: z.string().max(120),
 });
 const userResponseSchema = userRequestSchema
   .extend({
@@ -30,7 +25,10 @@ const userUpdateSchema = z
       .string()
       .max(120)
       .transform((pass) => {
-        return hashSync(pass, 10);
+        const isEncrypted = getRounds(pass);
+        if (!isEncrypted) {
+          return hashSync(pass, 10);
+        }
       }),
   })
   .partial();

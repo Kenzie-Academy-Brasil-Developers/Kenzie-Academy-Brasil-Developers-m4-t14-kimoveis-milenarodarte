@@ -19,7 +19,7 @@ const listSchedulesByRealEstateService = async (
   });
 
   if (realEstate === null) {
-    throw new AppError("Real Estate not found", 404);
+    throw new AppError("RealEstate not found", 404);
   }
 
   return realEstate;

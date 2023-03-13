@@ -40,6 +40,7 @@ class RealEstate {
   category: Category | null;
 
   @OneToMany(() => Schedule, (Schedule) => Schedule.realEstate)
-  schedule: Schedule[];
+  schedules: Schedule[];
+  realEstate: RealEstate;
 }
 export { RealEstate };

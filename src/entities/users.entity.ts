@@ -8,7 +8,9 @@ import {
   DeleteDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from "typeorm";
+import { Schedule } from "./schedule.entity";
 
 @Entity("users")
 class User {
@@ -35,6 +37,9 @@ class User {
 
   @DeleteDateColumn({ type: "date" })
   deletedAt?: string;
+
+  @OneToMany(() => Schedule, (Schedule) => Schedule.user)
+  schedule: Schedule[];
 
   @BeforeInsert()
   @BeforeUpdate()

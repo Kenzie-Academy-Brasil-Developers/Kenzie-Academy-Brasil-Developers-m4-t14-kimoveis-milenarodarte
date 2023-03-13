@@ -15,14 +15,13 @@ const loginService = async (loginData: ILoginRequest): Promise<string> => {
       email: loginData.email,
     },
   });
-  console.log("loginData: ", loginData, "login", login);
 
   if (login === null) {
     throw new AppError("Invalid credentials", 401);
   }
   const matchPassword: boolean = await compare(
-    login.password,
-    loginData.password
+    loginData.password,
+    login.password
   );
 
   if (!matchPassword) {

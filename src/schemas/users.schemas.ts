@@ -21,15 +21,7 @@ const userUpdateSchema = z
   .object({
     name: z.string().max(45).min(3),
     email: z.string().max(45).email(),
-    password: z
-      .string()
-      .max(120)
-      .transform((pass) => {
-        const isEncrypted = getRounds(pass);
-        if (!isEncrypted) {
-          return hashSync(pass, 10);
-        }
-      }),
+    password: z.string().max(120),
   })
   .partial();
 export {

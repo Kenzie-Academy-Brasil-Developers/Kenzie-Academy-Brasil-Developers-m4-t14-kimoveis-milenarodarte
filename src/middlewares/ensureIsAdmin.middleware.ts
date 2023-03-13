@@ -9,15 +9,9 @@ const ensureIsAdminMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   const id = req.admin.id;
+  const isAdmin = req.admin.admin;
 
-  const userRepository: Repository<User> = AppDataSource.getRepository(User);
-  const user = await userRepository.findOne({
-    where: {
-      id: id,
-    },
-  });
-
-  if (user!.admin === false) {
+  if (isAdmin === false) {
     throw new AppError("Insufficient permission", 403);
   }
   next();

@@ -14,17 +14,8 @@ const ScheduleSchemaResponse = ScheduleSchemaRequest.extend({
 
 const MultipleScheduleSchemaResponse = ScheduleSchemaResponse.array();
 
-const ScheduleByRealEstateSchemaResponse = realEstateSchemaResponse
-  .omit({})
-  .extend({
-    schedule: ScheduleSchemaResponse.omit({
-      realEstateId: true,
-      userId: true,
-    }).array(),
-  });
 export {
   ScheduleSchemaRequest,
   ScheduleSchemaResponse,
   MultipleScheduleSchemaResponse,
-  ScheduleByRealEstateSchemaResponse,
 };

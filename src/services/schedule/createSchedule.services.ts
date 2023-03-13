@@ -2,16 +2,12 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { AppError } from "../../errors";
 import { Schedule, User, RealEstate } from "../../entities";
-import {
-  IScheduleRequest,
-  IscheduleResponse,
-} from "../../interfaces/schedule.interface";
-import { ScheduleSchemaResponse } from "../../schemas/schedules.schemas";
+import { IScheduleRequest } from "../../interfaces/schedule.interface";
 
 const createScheduleServices = async (
   payload: IScheduleRequest,
   userID: number
-): Promise<any> => {
+): Promise<string> => {
   const schedulesRepository: Repository<Schedule> =
     AppDataSource.getRepository(Schedule);
   const realEstateRepository: Repository<RealEstate> =
@@ -31,7 +27,10 @@ const createScheduleServices = async (
     .getOne();
 
   if (findRealEstateIDWithEqualDataAndHour !== null) {
-    throw new AppError("Real Estate already schedule for this date/hour", 409);
+    throw new AppError(
+      "Schedule to this real estate at this date and time already exists",
+      409
+    );
   }
   const findUserIdWithEqualDateAndHour = await schedulesRepository
     .createQueryBuilder("schedules")
@@ -43,7 +42,7 @@ const createScheduleServices = async (
 
   if (findUserIdWithEqualDateAndHour !== null) {
     throw new AppError(
-      "User already schedule another real estate for this hour/date",
+      "User schedule to this real estate at this date and time already exists",
       409
     );
   }
@@ -52,44 +51,40 @@ const createScheduleServices = async (
   const isWeekDays = weekdays.includes(scheduleDate.getDay());
 
   if (!isWeekDays) {
-    throw new AppError(
-      "its only been allowed to schedule in business day",
-      409
-    );
+    throw new AppError("Invalid date, work days are monday to friday", 400);
   }
 
-  const commercialHourBegins = new Date();
-  commercialHourBegins.setHours(8, 0, 0);
-  const commercialHourEnds = new Date();
-  commercialHourEnds.setHours(18, 0, 0);
+  const [hours, minutes] = hour.split(":");
+  const hoursNumber = Number(hours);
+  const minutesNumber = Number(minutes);
 
-  const hourSchedule = new Date(hour);
-  if (
-    hourSchedule < commercialHourBegins ||
-    hourSchedule > commercialHourEnds
-  ) {
-    throw new AppError("its only been allowed schedule in business hours", 409);
+  if (hoursNumber < 8) {
+    throw new AppError("Invalid hour, available times are 8AM to 18PM", 400);
   }
+  if (hoursNumber >= 18) {
+    throw new AppError("Invalid hour, available times are 8AM to 18PM", 400);
+  }
+
   const findRealEstate = await realEstateRepository.findOne({
     where: {
       id: payload.realEstateId,
     },
   });
+  if (findRealEstate === null) {
+    throw new AppError("RealEstate not found", 404);
+  }
   const findUserRepository = await userRepository.findOneBy({
     id: userID,
   });
-  console.log(findRealEstate, findUserRepository);
 
   const schedule = schedulesRepository.create({
     ...payload,
     realEstate: findRealEstate!,
     user: findUserRepository!,
   });
-  //
 
   await schedulesRepository.save(schedule);
-  console.log(schedule, "aaaa");
 
-  return schedule;
+  return "Schedule created";
 };
 export { createScheduleServices };

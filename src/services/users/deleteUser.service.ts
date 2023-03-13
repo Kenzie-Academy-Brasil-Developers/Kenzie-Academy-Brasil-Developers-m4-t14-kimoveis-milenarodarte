@@ -10,11 +10,7 @@ const deleteUserService = async (id: number): Promise<void> => {
       id: id,
     },
   });
-  const date = new Date();
-  const user = userRepository.create({
-    ...oldUserData,
-    deletedAt: date,
-  });
-  await userRepository.save(user);
+
+  await userRepository.softRemove(oldUserData!);
 };
 export default deleteUserService;

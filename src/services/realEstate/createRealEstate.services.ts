@@ -5,16 +5,13 @@ import {
 import { Repository } from "typeorm";
 import { Address, Category, RealEstate } from "../../entities";
 import { AppDataSource } from "../../data-source";
-import {
-  realEstateSchemaRequest,
-  realEstateSchemaResponse,
-} from "../../schemas/realEstate.schema";
+import { realEstateSchemaRequest } from "../../schemas/realEstate.schema";
 import { AddressSchemaResponse } from "../../schemas/adress.schemas";
 import { AppError } from "../../errors";
-import { boolean } from "zod";
+
 const createRealEstateService = async (
   realEstateData: IRealEstateRequest
-): Promise<any> => {
+): Promise<IRealEstateResponse> => {
   const realEstateRepository: Repository<RealEstate> =
     AppDataSource.getRepository(RealEstate);
   const adressRepository: Repository<Address> =
@@ -46,7 +43,7 @@ const createRealEstateService = async (
     });
 
     if (verifyIfAdressIsBeingUsed !== null) {
-      throw new AppError("address already exists", 409);
+      throw new AppError("Address already exists", 409);
     } else {
       newAddress = addressVerification;
     }
@@ -63,7 +60,7 @@ const createRealEstateService = async (
   const realEstate = realEstateRepository.create({
     ...realEstateData,
     category: category,
-    adress: newAddress,
+    address: newAddress,
   });
 
   await realEstateRepository.save(realEstate);

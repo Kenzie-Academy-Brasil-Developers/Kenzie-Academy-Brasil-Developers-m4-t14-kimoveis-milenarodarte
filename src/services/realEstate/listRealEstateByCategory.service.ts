@@ -1,15 +1,15 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
-import { Category, RealEstate } from "../../entities";
+import { Category } from "../../entities";
 import { AppError } from "../../errors";
-import { IMultipleRealEstateResponse } from "../../interfaces/realEstate.interface";
-import { multipleRealEstateResponseSchema } from "../../schemas/realEstate.schema";
+import { IRealEstateByCategoriesResponse } from "../../interfaces/categories.interface";
 
-const listRealEstateByCategoryService = async (id: number): Promise<any> => {
+const listRealEstateByCategoryService = async (
+  id: number
+): Promise<IRealEstateByCategoriesResponse> => {
   const categoryRepository: Repository<Category> =
     AppDataSource.getRepository(Category);
 
-  // tipar
   const category = await categoryRepository.findOne({
     where: {
       id: id,
@@ -20,13 +20,9 @@ const listRealEstateByCategoryService = async (id: number): Promise<any> => {
   });
 
   if (category === null) {
-    throw new AppError("Category does not exists", 404);
+    throw new AppError("Category not found", 404);
   }
-  console.log(category);
 
-  //verificar se a categoria existe
   return category;
-  // nao consigo filtra pela categoria Id, fica dandoi erro
-  //const allcategory = multiplecategoryResponseSchema.parse(category);
 };
 export default listRealEstateByCategoryService;

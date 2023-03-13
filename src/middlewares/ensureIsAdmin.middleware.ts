@@ -1,12 +1,24 @@
 import { NextFunction, Request, Response } from "express";
+import { Repository } from "typeorm";
+import { AppDataSource } from "../data-source";
 import { AppError } from "../errors";
+import { User } from "../entities";
 const ensureIsAdminMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  if (req.admin.admin === "false") {
-    throw new AppError("Insufficient Permission", 403);
+  const id = req.admin.id;
+
+  const userRepository: Repository<User> = AppDataSource.getRepository(User);
+  const user = await userRepository.findOne({
+    where: {
+      id: id,
+    },
+  });
+
+  if (user!.admin === false) {
+    throw new AppError("Insufficient permission", 403);
   }
   next();
 };

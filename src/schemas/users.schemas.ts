@@ -14,15 +14,26 @@ const userRequestSchema = z.object({
 const userResponseSchema = userRequestSchema
   .extend({
     id: z.number(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    deletedAt: z.date().nullable(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    deletedAt: z.string().nullable(),
   })
   .omit({
     password: true,
   });
 const multipleUsersResponse = userResponseSchema.array();
-const userUpdateSchema = userRequestSchema.omit({ admin: true }).partial();
+const userUpdateSchema = z
+  .object({
+    name: z.string().max(45).min(3),
+    email: z.string().max(45).email(),
+    password: z
+      .string()
+      .max(120)
+      .transform((pass) => {
+        return hashSync(pass, 10);
+      }),
+  })
+  .partial();
 export {
   userRequestSchema,
   userResponseSchema,

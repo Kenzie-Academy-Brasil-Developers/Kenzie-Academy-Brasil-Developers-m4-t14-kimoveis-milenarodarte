@@ -6,11 +6,7 @@ import { multipleUsersResponse } from "../../schemas/users.schemas";
 
 const listUsersService = async (): Promise<IMultipleUsersResponse> => {
   const usersRepository: Repository<User> = AppDataSource.getRepository(User);
-  const users = await usersRepository.find({
-    order: {
-      id: "ASC",
-    },
-  });
+  const users = await usersRepository.find();
   const allUsers = multipleUsersResponse.parse(users);
 
   return allUsers;

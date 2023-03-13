@@ -21,7 +21,7 @@ const verifyEmailMiddleware = async (
     },
   });
   if (findEmail !== null) {
-    throw new AppError("Email already exists.", 409);
+    throw new AppError("Email already exists", 409);
   }
   next();
 };

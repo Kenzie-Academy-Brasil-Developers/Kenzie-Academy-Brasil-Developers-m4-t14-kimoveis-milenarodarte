@@ -1,4 +1,3 @@
-import { TimeLike } from "fs";
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { RealEstate } from "./realEstate.entity";
 import { User } from "./users.entity";
@@ -8,10 +7,10 @@ class Schedule {
   id: number;
 
   @Column({ type: "date" })
-  date: string | Date;
+  date: string;
 
   @Column({ type: "time" })
-  hour: Date;
+  hour: string;
 
   @ManyToOne(() => RealEstate, { onDelete: "CASCADE" })
   realEstate: RealEstate;

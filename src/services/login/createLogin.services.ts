@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { User } from "../../entities";
 import { AppDataSource } from "../../data-source";
 import { AppError } from "../../errors";
-import { userResponseSchema } from "../../schemas/users.schemas";
+
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -15,18 +15,21 @@ const loginService = async (loginData: ILoginRequest): Promise<string> => {
       email: loginData.email,
     },
   });
+
   if (login === null) {
-    throw new AppError("wrong email/password", 401);
+    throw new AppError("Invalid credentials", 401);
   }
   const matchPassword: boolean = await compare(
     loginData.password,
     login.password
   );
+
   if (!matchPassword) {
-    throw new AppError("wrong email/password", 401);
+    throw new AppError("Invalid credentials", 401);
   }
+
   if (login.deletedAt !== null) {
-    throw new AppError("wrong email/password", 401);
+    throw new AppError("Invalid credentials", 401);
   }
   const token: string = jwt.sign(
     {

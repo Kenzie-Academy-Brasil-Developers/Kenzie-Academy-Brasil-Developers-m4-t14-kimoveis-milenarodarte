@@ -18,19 +18,19 @@ class User {
   @Column({ type: "varchar", length: 45, unique: true })
   email: string;
 
-  @Column({ type: "boolean" })
+  @Column({ type: "boolean", default: false })
   admin: boolean;
 
   @Column({ type: "varchar", length: 120 })
   password: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "date" })
   createdAt: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "date" })
   updatedAt: string;
 
-  @DeleteDateColumn({ type: "date", nullable: true })
-  deletedAt?: string | null | undefined | Date;
+  @DeleteDateColumn({ type: "date" })
+  deletedAt?: string;
 }
 export { User };

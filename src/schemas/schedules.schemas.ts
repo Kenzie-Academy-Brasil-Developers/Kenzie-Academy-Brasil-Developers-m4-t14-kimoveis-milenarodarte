@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { realEstateSchemaResponse } from "./realEstate.schema";
 
 const ScheduleSchemaRequest = z.object({
-  date: z.coerce.string(),
+  date: z.string(),
   hour: z.string(),
   realEstateId: z.number().int(),
 });
@@ -12,8 +13,18 @@ const ScheduleSchemaResponse = ScheduleSchemaRequest.extend({
 });
 
 const MultipleScheduleSchemaResponse = ScheduleSchemaResponse.array();
+
+const ScheduleByRealEstateSchemaResponse = realEstateSchemaResponse
+  .omit({})
+  .extend({
+    schedule: ScheduleSchemaResponse.omit({
+      realEstateId: true,
+      userId: true,
+    }).array(),
+  });
 export {
   ScheduleSchemaRequest,
   ScheduleSchemaResponse,
   MultipleScheduleSchemaResponse,
+  ScheduleByRealEstateSchemaResponse,
 };
